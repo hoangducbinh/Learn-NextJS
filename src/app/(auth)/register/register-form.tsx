@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema"
+import envConfig from "@/config"
 
 
 const formSchema = z.object({
@@ -24,6 +25,7 @@ const formSchema = z.object({
 })
 
 const RegisterForm =()=> {
+  
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     defaultValues: {
@@ -34,9 +36,16 @@ const RegisterForm =()=> {
     },
   })
  
-  function onSubmit(values: RegisterBodyType) {
+  async function onSubmit(values: RegisterBodyType) {
+   const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/register`,{
+      body: JSON.stringify(values),
+      headers:{
+        "Content-Type": 'application/json'
+      },
+      method:'POST'
+    }).then((res)=> res.json())
+    console.log(result);
     
-    console.log(values)
   }
 
   return (
